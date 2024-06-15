@@ -1,0 +1,13 @@
+<h1>Listado de Preguntas</h1>
+<ul>
+    <li *ngFor="let test of userTests; let i = index">
+        <div class="container">
+          
+               <h3>{{ i + 1 }}. Test</h3>
+               <h5><b>Tipo:</b> {{test.tipo}}</h5>
+        
+            <p><strong>Resultado:</strong> {{ imprimirResultado(test.aprobado) }} <button [routerLink]="['/record', i]" >Ver Test</button></p>
+           
+        </div>
+    </li>
+</ul>

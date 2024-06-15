@@ -1,0 +1,59 @@
+<div class="container">
+    <div *ngIf="revision">
+        <h2 *ngIf="aprobado === true"><b>Aprobado: </b> {{correctos}}/{{maxQuestions}}</h2>
+        <h2 *ngIf="aprobado === false"><b>Suspenso: </b> {{correctos}}/{{maxQuestions}}</h2>
+    </div>
+    <div class="question-card">
+      <h2>Pregunta numero: {{currentQuestionIndex+1}}</h2>
+      <div class="question-content">
+        <div class="image">
+          <img *ngIf="TestContent[currentQuestionIndex].img" [src]="TestContent[currentQuestionIndex].img" alt="Imagen de la pregunta">
+        </div>
+        <div class="text">
+          <div class="question-text">
+            <h3>{{ TestContent[currentQuestionIndex].pregunta }}</h3>
+          </div>
+          <div class="answers">
+            <button class="answer-button" 
+                    *ngFor="let answer of ['a', 'b', 'c']" 
+                    [ngClass]="{ 'selected': selectedAnswer === answer }" 
+                    (click)="selectAnswer(answer)"
+                    [disabled]="revision">
+              {{ answer }}. {{ TestContent[currentQuestionIndex][answer] }}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="explanation" *ngIf="revision">
+        <strong>Respuesta:</strong> {{ printAnswerValue(TestContent[currentQuestionIndex]) }}
+        <br>
+        <strong>Explicación:</strong> {{ TestContent[currentQuestionIndex].explicacion }}
+      </div>
+    </div>
+    <div *ngIf="revision" class="navigation" style="padding-bottom: 5px;">
+      <button [routerLink]="['/home']" >Finalizar</button>
+    </div>
+    <div class="navigation">
+      <button (click)="previousQuestion()" *ngIf="currentQuestionIndex!=0" [disabled]="currentQuestionIndex === 0">Anterior</button>
+      <button (click)="nextQuestion()" *ngIf="currentQuestionIndex!=maxQuestions-1" [disabled]="currentQuestionIndex === TestContent.length - 1">Siguiente</button>
+      <button (click)="revisar()" *ngIf="currentQuestionIndex==maxQuestions-1">Revisar</button>
+    </div>
+   
+  </div>
+  <div>
+    <div *ngFor="let row of [].constructor(columns); let rowIndex = index">
+      <div class="button-row">
+        <ng-container *ngFor="let colIndex of [].constructor(maxQuestionsPerColumns); let col = index" >
+          <button *ngIf="rowIndex * maxQuestionsPerColumns + col < maxQuestions" (click)="setCurrentQuestion(rowIndex * maxQuestionsPerColumns+ col)" 
+           [ngClass]="{
+            'correct': isCorrect(rowIndex * maxQuestionsPerColumns+ col) === true,
+            'incorrect': isInCorrect(rowIndex * maxQuestionsPerColumns+ col) === true
+          }" 
+          >
+            {{ rowIndex * maxQuestionsPerColumns + col + 1 }}
+          </button>
+        </ng-container>
+      
+      </div>
+    </div>
+  </div>
